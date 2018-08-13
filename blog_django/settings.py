@@ -25,7 +25,7 @@ SECRET_KEY = 'ja@!p79%-98dpjipr(p(!bc!0uyf(l&+=d4u+v=lpj@_7aizk1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost ', '.dmfly.xin']
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
