@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ja@!p79%-98dpjipr(p(!bc!0uyf(l&+=d4u+v=lpj@_7aizk1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # True
+DEBUG =  True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost ', '.dmfly.xin']
 
