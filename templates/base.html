@@ -21,6 +21,40 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/pace.min.js' %}"></script>
     <script src="{% static 'js/modernizr.custom.js' %}"></script>
+    <style>
+        .pagination {margin-top: 25px; text-align: center;}
+        .pagination a {
+          display: inline-block;
+          line-height: 38px;
+          padding: 0 15px;
+          margin-right: 4px;
+          text-align: center;
+          background-color: #fff;
+          user-select: none;
+          cursor: pointer;
+          font-size: 14px;
+          border: 1px solid #d7dde4;
+          border-radius: 4px;
+          transition: all .2s ease-in-out;
+        }
+        .pagination a:hover {
+          color: #A161BF;
+          border: 1px solid #A161BF;
+        }
+        .pagination .current-page {color: white; background-color: #A161BF;}
+        .pagination .current-page:hover {
+          color: white;
+          border: 1px solid #A161BF;
+        }
+        .pagination span {
+          display: inline-block;
+          font-size: 20px;
+          line-height: 38px;
+          padding: 0 8px;
+          margin-right: 4px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -108,7 +142,9 @@
                     <ul>
                         {% for category in category_list %}
                         <li>
-                            <a href="{% url 'blog:category' category.pk %}">'{{category.name}} <span class="post-count">(13)</span></a>
+                            <a href="{% url 'blog:category' category.pk %}">'{{category.name}}
+                                <span class="post-count">({{ category.num_posts }})</span>
+                            </a>
                         </li>
                         {% empty %}
                         暂无分类
@@ -118,41 +154,19 @@
 
                 <div class="widget widget-tag-cloud">
                     <h3 class="widget-title">标签云</h3>
-                    <ul>
+                    {% get_tags as tag_list %}
+                      <ul>
+                        {% for tag in tag_list %}
                         <li>
-                            <a href="#">Django</a>
+                          <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
                         </li>
-                        <li>
-                            <a href="#">Python</a>
-                        </li>
-                        <li>
-                            <a href="#">Java</a>
-                        </li>
-                        <li>
-                            <a href="#">笔记</a>
-                        </li>
-                        <li>
-                            <a href="#">文档</a>
-                        </li>
-                        <li>
-                            <a href="#">AngularJS</a>
-                        </li>
-                        <li>
-                            <a href="#">CSS</a>
-                        </li>
-                        <li>
-                            <a href="#">JavaScript</a>
-                        </li>
-                        <li>
-                            <a href="#">Snippet</a>
-                        </li>
-                        <li>
-                            <a href="#">jQuery</a>
-                        </li>
-                    </ul>
+                        {% empty %}
+                        暂无标签！
+                        {% endfor %}
+                      </ul>
                 </div>
                 <div class="rss">
-                    <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+                    <a href="{% url 'rss' %}"><span class="ion-social-rss-outline"></span> RSS 订阅</a>
                 </div>
             </aside>
         </div>
