@@ -25,10 +25,10 @@ class Post(models.Model):
     created_time = models.DateTimeField()
     modified_time = models.DateTimeField()
     excerpt = models.CharField(max_length=200, blank=True)  # 文章摘要
-    category = models.ForeignKey(Category)  # 文章分类
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # 文章分类
     tags = models.ManyToManyField(Tag, blank=True)  # 文章标签
-    author = models.ForeignKey(User)  # 文章作者
-    views = models.PositiveIntegerField(default=0)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)  # 文章作者
+    views = models.PositiveIntegerField(default=0)  # 阅读量
 
     def __str__(self):
         return self.title

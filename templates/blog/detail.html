@@ -1,73 +1,81 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
-    {% block main %}
-        <article class="post post-{{post.pk}}">
-            <header class="entry-header">
-                <h1 class="entry-title">{{post.title}}</h1>
-                <div class="entry-meta">
-                    <span class="post-category"><a href="#">{{post.category.name}}</a></span>
-                    <span class="post-date"><a href="#"><time class="entry-date"
-                                                              datetime="{{post.created_time}}">{{post.created_time}}</time></a></span>
-                    <span class="post-author"><a href="#">{{post.author}}</a></span>
-                    <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
-                    <span class="views-count"><a href="#">{{post.views}} 阅读</a></span>
-                </div>
-            </header>
-            <div class="entry-content clearfix">
-                {{post.body|safe}}
+{% block main %}
+    <article class="post post-{{post.pk}}">
+        <header class="entry-header">
+            <h2 class="text-center" style="margin: 10px 0px;">{{post.title}}</h2>
+            <div class="entry-meta">
+                <span class="post-category"><a href="#">{{post.category.name}}</a></span>
+                <span class="post-date"><a href="#"><time class="entry-date"
+                                                          datetime="{{post.created_time}}">{{post.created_time}}</time></a></span>
+                <span class="post-author"><a href="#">{{post.author}}</a></span>
+                <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
+                <span class="views-count"><a href="#">{{post.views}} 阅读</a></span>
             </div>
-        </article>
-        <section class="comment-area" id="comment-area">
-            <hr>
-            <h3>发表评论</h3>
-            <form action="{% url 'comments:post_comment' post.pk %}" method="post" class="comment-form">
-              {% csrf_token %}
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="{{ form.name.id_for_label }}">名字：</label>
-                  {{ form.name }}
-                  {{ form.name.errors }}
-                </div>
-                <div class="col-md-4">
-                  <label for="{{ form.email.id_for_label }}">邮箱：</label>
-                  {{ form.email }}
-                  {{ form.email.errors }}
-                </div>
-                <div class="col-md-4">
-                  <label for="{{ form.url.id_for_label }}">URL：</label>
-                  {{ form.url }}
-                  {{ form.url.errors }}
-                </div>
-                <div class="col-md-12">
-                  <label for="{{ form.text.id_for_label }}">评论：</label>
-                  {{ form.text }}
-                  {{ form.text.errors }}
-                  <button type="submit" class="comment-btn">发表</button>
-                </div>
-              </div>    <!-- row -->
-            </form>
-            <div class="comment-list-panel">
-                <h3>评论列表，共 <span>{{ post.comment_set.count }}</span> 条评论</h3>
-                <ul class="comment-list list-unstyled">
-                    {% for comment in comment_list %}
-                    <li class="comment-item">
-                        <span class="nickname">{{ comment.name }}</span>
-                        <time class="submit-date">{{ comment.created_time }}</time>
-                        <div class="text">
-                          {{ comment.text }}
-                        </div>
-                    </li>
-                    {% empty %}
-                    暂无评论
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-    {% endblock main %}
-    {% block toc %}
-        <div class="widget widget-content">
-            <h3 class="widget-title">文章目录</h3>
-            {{ post.toc|safe }}
+        </header>
+        <div class="entry-content clearfix" style="color: #444;">
+            {{post.body|safe}}
         </div>
-    {% endblock toc %}
+    </article>
+    <div class="form-group">
+        <hr>
+        <h4>发表评论</h4>
+        <form action="{% url 'comments:post_comment' post.pk %}" method="post" class="comment-form">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-4">
+              <label for="{{ form.name.id_for_label }}">名字：</label>
+              {% bootstrap_field form.name layout='horizontal' placeholder='请输入昵称' show_label=False horizontal_field_class='col-md-12' %}
+              {{form.name.errors }}
+            </div>
+            <div class="col-md-4">
+              <label for="{{ form.email.id_for_label }}">邮箱：</label>
+              {% bootstrap_field form.email layout='horizontal' placeholder='请输入联系邮箱' show_label=False  horizontal_field_class='col-md-12' %}
+              {{ form.email.errors }}
+            </div>
+            <div class="col-md-4">
+              <label for="{{ form.url.id_for_label }}">URL：</label>
+              {% bootstrap_field form.url layout='horizontal' show_label=False  horizontal_field_class='col-md-12' %}
+              {{ form.url.errors }}
+            </div>
+            <div class="col-md-12">
+              <label for="{{ form.text.id_for_label }}">评论：</label>
+              {% bootstrap_field form.text show_label=False size="sm"  placeholder='请输入联系内容' %}
+              {{ form.text.errors }}
+              {% buttons submit='发表' reset="取消" %}{% endbuttons %}
+            </div>
+          </div>    <!-- row -->
+        </form>
+        <div class="comment-list-panel">
+            <h4>评论列表，共 <span>{{ post.comment_set.count }}</span> 条评论</h4>
+            <ul class="comment-list list-unstyled">
+                {% for comment in comment_list %}
+                <li class="comment-item">
+                    <span class="nickname">{{ comment.name }}</span>
+                    <time class="submit-date">{{ comment.created_time }}</time>
+                    <div class="text">
+                      {{ comment.text }}
+                    </div>
+                </li>
+                {% empty %}
+                暂无评论
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block toc %}
+    <li class="list-group-item">
+        <div class="widget widget-content">
+            <h4 class="widget-title">文章目录</h4>
+            {% if post.toc %}
+                {{ post.toc|safe }}
+            {% else %}
+                <span>此文章未设目录</span>
+            {% endif %}
+        </div>
+    </li>
+{% endblock toc %}
 
