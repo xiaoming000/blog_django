@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'blog',
     'comments',
+    'widget_tweaks',
 
     'django.contrib.sites',
     'allauth',

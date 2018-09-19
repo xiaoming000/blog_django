@@ -1,0 +1,95 @@
+{% load staticfiles %}
+{% load blog_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ htitle }}</title>
+
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    {% block head %}{% endblock head %}
+
+    <script>
+    $(function () {
+        {% if nav == 1 %}
+            $(".Python").addClass("active");
+        {% elif nav == 2%}
+            $(".Linux").addClass("active");
+        {% elif nav == 3 %}
+            $(".other").addClass("active");
+        {% elif nav == 4 %}
+            $(".essay").addClass("active");
+        {% elif nav == 5 %}
+            $(".message").addClass("active");
+        {% endif %}
+    });
+    </script>
+</head>
+
+<body style="background-color: #eee">
+<!--header-->
+<div id="head">
+    {% if user.is_authenticated %}
+    <div class="float-left">
+        <img class="rounded-circle" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="width: 70px;height: 70px;">
+    </div>
+    <div class="float-right">
+        <a href="{% url 'account_logout' %}" style="font-size: 20px;padding-right: 10px;">
+            <i class="fa fa-sign-out"><span style="padding-left: 5px;">退出</span></i>
+        </a>
+    </div>
+    {% else %}
+    <div class="float-right">
+        <a href="{% url 'account_login' %}" style="font-size: 20px;padding-right: 10px;">
+            <i class="fa fa-user"><span style="padding-left: 5px;">登入</span></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
+<!--导航栏-->
+<div class="clearfix">
+    <nav class="navbar navbar-expand-xl bg-dark navbar-dark" role="navigation">
+        <div class="container">
+        <!--导航栏首页-->
+        <a class="navbar-brand" href="{% url 'blog:index' %}">首页</a>
+        <!--栏目-->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar" style="font-size: 16px;">
+            <!--搜素栏目-->
+            <ul class="nav navbar-nav bar">
+                <li class="nav-item Python"> <a class="nav-link" href="{% url 'blog:python_list' %}">Python</a></li>
+                <li class="nav-item Linux"> <a class="nav-link" href="{% url 'blog:linux_list' %}">Linux</a></li>
+                <li class="nav-item other"> <a class="nav-link" href="{% url 'blog:other_list' %}">其他技术文章</a></li>
+                <li class="nav-item essay"> <a class="nav-link" href="{% url 'blog:essay_list' %}">随笔</a></li>
+                <li class="nav-item message"> <a class="nav-link" href="{% url 'blog:message' %}">与我联系</a></li>
+            </ul>
+        </div>
+        <div>
+            <form class="form-inline" role="search">
+                <input type="text" class="form-control" />
+                <button class="btn btn-success" type="button">搜索</button>
+            </form>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+    </nav>
+</div>
+
+{% block middle %}
+{% endblock middle %}
+
+</body>
+</html>

@@ -1,13 +1,5 @@
 
 /*首页文章链接*/
-a:link, a:active, a:visited {
-    color: #444444;
-    text-decoration: none;
-}
-.article_list a:hover {
-    color: red;
-    text-decoration: none;
-}
 .article_list {
     margin: 10px 0px;
 }

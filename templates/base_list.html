@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load blog_tags %}
+
+{% block head %}
+<style>
+    a:link, a:active, a:visited {
+        color: #444444;
+        text-decoration: none;
+    }
+    a:hover {
+        color: red;
+        text-decoration: none;
+    }
+</style>
+{% endblock head %}
+
+{% block middle %}
+<div class="container">
+    <div class="row">
+        <main class="col-md-9">
+            {% block main %}
+            {% endblock main %}
+        </main>
+        <aside class="col-md-3">
+            <ul class="list-group">
+                {% block toc %}
+                {% endblock toc %}
+                <li class="list-group-item" style="margin: 10px 0px;">
+                    <div class="widget widget-recent-posts">
+                        <h4 class="widget-title">最新文章</h4>
+                        {% get_recent_posts as recent_post_list %}
+                        <ul>
+                            {% for post in recent_post_list %}
+                            <li>
+                                <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+                            </li>
+                            {% empty %}
+                            暂无文章！
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="widget widget-archives">
+                        <h4 class="widget-title">归档</h4>
+                        {% archives as date_list %}
+                        <ul>
+                            {% for date in date_list %}
+                            <li>
+                                <a href="{% url 'blog:archives' date.year date.month %}">{{date.year}} 年 {{date.month}} 月</a>
+                            </li>
+                            {% empty %}
+                            暂无归档！
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="widget widget-category">
+                        <h4 class="widget-title">分类</h4>
+                        {% get_categories as category_list %}
+                        <ul>
+                            {% for category in category_list %}
+                            <li>
+                                <a href="{% url 'blog:category' category.pk %}">'{{category.name}}
+                                    <span class="post-count">({{ category.num_posts }})</span>
+                                </a>
+                            </li>
+                            {% empty %}
+                            暂无分类
+                            {% endfor %}
+                    </ul>
+                </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="widget widget-tag-cloud">
+                        <h4 class="widget-title">标签云</h4>
+                        {% get_tags as tag_list %}
+                          <ul>
+                            {% for tag in tag_list %}
+                            <li>
+                              <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+                            </li>
+                            {% empty %}
+                            暂无标签！
+                            {% endfor %}
+                          </ul>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="rss">
+                        <a href="{% url 'rss' %}"><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+                    </div>
+                </li>
+
+
+            </ul>
+        </aside>
+    </div>
+</div>
+{% endblock middle %}
