@@ -1,0 +1,19 @@
+
+/*首页文章链接*/
+a:link, a:active, a:visited {
+    color: #444444;
+    text-decoration: none;
+}
+.article_list a:hover {
+    color: red;
+    text-decoration: none;
+}
+.article_list {
+    margin: 10px 0px;
+}
+
+/*header*/
+#head {
+    height: 70px;
+    background: #d4edda url("../img/zhumeng.png") no-repeat center;
+}

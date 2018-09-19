@@ -39,6 +39,10 @@
 <body style="background-color: #eee">
 <!--header-->
 <div id="head">
+    {% if user.is_authenticated %}
+    <div class="float-left"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="width: 70px;height: 70px;"></div>
+    <div class="float-right"><a href="{% url 'account_logout' %}">退出</a></div>
+    {% else %}
     <div class="float-right">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
           登入
@@ -57,7 +61,10 @@
 
               <!-- 模态框主体 -->
               <div class="modal-body">
-                <i class="fa fa-github fa-5x" aria-hidden="true"></i>
+                <a href="/accounts/github/login/?process=login">
+                    <i class="fa fa-github fa-5x" aria-hidden="true"></i>
+                    <span>Github登入</span>
+                </a>
               </div>
 
               <!-- 模态框底部 -->
@@ -69,6 +76,7 @@
           </div>
         </div>
     </div>
+    {% endif %}
 </div>
 <!--导航栏-->
 <div class="clearfix">
