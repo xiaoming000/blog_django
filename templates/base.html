@@ -70,7 +70,7 @@
             <ul class="nav navbar-nav bar">
                 <li class="nav-item Python"> <a class="nav-link" href="{% url 'blog:python_list' %}">Python</a></li>
                 <li class="nav-item Linux"> <a class="nav-link" href="{% url 'blog:linux_list' %}">Linux</a></li>
-                <li class="nav-item other"> <a class="nav-link" href="{% url 'blog:other_list' %}">其他技术文章</a></li>
+                <!--<li class="nav-item other"> <a class="nav-link" href="{% url 'blog:other_list' %}">其他技术文章</a></li>-->
                 <li class="nav-item essay"> <a class="nav-link" href="{% url 'blog:essay_list' %}">随笔</a></li>
                 <li class="nav-item message"> <a class="nav-link" href="{% url 'blog:message' %}">与我联系</a></li>
             </ul>
@@ -90,6 +90,12 @@
 
 {% block middle %}
 {% endblock middle %}
+
+<footer id="footer">
+    <div style="height: 70px;">
+
+    </div>
+</footer>
 
 </body>
 </html>

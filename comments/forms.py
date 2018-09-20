@@ -1,8 +1,14 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Reply
 
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['name', 'email', 'url', 'text']
+        fields = ['text']
+
+
+class PostReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['reply_type', 'comment', 'text']

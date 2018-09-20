@@ -9,3 +9,8 @@
     height: 70px;
     background: #d4edda url("../img/zhumeng.png") no-repeat center;
 }
+
+#footer {
+    height: 70px;
+    background-color: #d4edda;
+}
