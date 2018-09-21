@@ -1,0 +1,5 @@
+﻿## 忽略上传文件
+
+db.sqlite3
+
+blog_django/settings.py
