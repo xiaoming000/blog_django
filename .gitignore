@@ -2,6 +2,8 @@
 
 db.sqlite3
 
-blog_django/settings.py
 
 __pycache__
+
+blog_django/settings.py
+
