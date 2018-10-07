@@ -39,15 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'haystack',
     'bootstrap4',
-    'blog',
-    'comments',
     'widget_tweaks',
+    'tinymce',
 
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
+
+    'blog',
+    'comments',
+
 ]
 SITE_ID = 1
 
@@ -139,7 +142,7 @@ STATICFILES_DIRS = [
 # 基本设定
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
-LOGIN_REDIRECT_URL = '/accounts/profile/'
+# LOGIN_REDIRECT_URL = '/accounts/profile/'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

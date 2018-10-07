@@ -1,10 +1,16 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
-from .models import Post, Category, Tag
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from comments.forms import CommentForm
+from comments.models import Comment, Reply
 from django.views.generic import ListView, DetailView
 from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
+from django.contrib.auth.decorators import login_required
+from django.db.utils import IntegrityError
+from .form import PostForm
+from .models import Post, Category, Tag
 import markdown
+import json
+import datetime
 
 
 class IndexView(ListView):
@@ -153,18 +159,17 @@ class IndexView(ListView):
     #     return data
 
 
-def PythonList(request):
+def python_list(request):
     category = Category.objects.get(name='Python')
     post = Post.objects.filter(category_id=category)
     context = {
         'python_list': post,
         'htitle': "Python-梦flying的博客",
-        'nav': 1,
     }
     return render(request, 'blog/python.html', context=context)
 
 
-def LinuxList(request):
+def linux_list(request):
     category = Category.objects.get(name='Linux')
     post = Post.objects.filter(category_id=category)
     context = {
@@ -175,7 +180,7 @@ def LinuxList(request):
     return render(request, 'blog/Linux.html', context=context)
 
 
-def OtherList(request):
+def other_list(request):
     category = Category.objects.get(name='Other')
     post = Post.objects.filter(category_id=category)
     context = {
@@ -186,21 +191,19 @@ def OtherList(request):
     return render(request, 'blog/other.html', context=context)
 
 
-def EssayList(request):
+def essay_list(request):
     category = Category.objects.get(name='Essay')
     post = Post.objects.filter(category_id=category)
     context = {
         'essay_list': post,
         'htitle': "随笔-梦flying的博客",
-        'nav': 4,
     }
     return render(request, 'blog/essay.html', context=context)
 
 
-def Message(request):
+def message(request):
     context = {
         'htitle': "与我联系-梦flying的博客",
-        'nav': 5,
     }
     return render(request, 'blog/message.html', context=context)
 
@@ -262,41 +265,70 @@ class PostDetailView(DetailView):
         return context
 
 
-# def detail(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#
-#     post.increase_views()   # 阅读量
-#
-#     post.body = markdown.markdown(post.body,
-#                                   extensions=[
-#                                       'markdown.extensions.extra',
-#                                       'markdown.extensions.codehilite',
-#                                       'markdown.extensions.toc',
-#                                   ])
-#     # 评论
-#     form = CommentForm()
-#     comment_list = post.comment_set.all()
-#     context = {
-#         'post': post,
-#         'form': form,
-#         'comment_list': comment_list
-#     }
-#     return render(request, 'blog/detail.html', context=context)
-
-# def index(request):
-#     post_list = Post.objects.all()
-#     return render(request, 'blog/index.html', context={'post_list': post_list})
+@login_required()
+def push(request):
+    if request.method == 'POST'and request.user.is_staff:
+        form = PostForm(request.POST)
+        if form.is_valid():
+            tags = request.POST.getlist('tags[]')
+            # return HttpResponse(tags)
+            post = form.save(commit=False)
+            post.author = request.user
+            post.created_time = datetime.datetime.now()
+            post.modified_time = datetime.datetime.now()
+            post.save()
+            post.tags.set(tags)
+            return redirect('/')
+    else:
+        form = PostForm()
+        context = {
+            'form': form,
+        }
+    return render(request, 'blog/push.html', context=context)
 
 
-# def archives(request, year, month):
-#     post_list = Post.objects.filter(created_time__year=year,
-#                                     created_time__month=month
-#                                     )
-#     return render(request, 'blog/index.html', context={'post_list': post_list})
+@login_required()
+def add_tags(request):
+    if request.method == 'POST' and request.user.is_staff:
+        tags = request.POST.get('tags', '')
+        tags_list = tags.split()
+        response = {}
+        for tag in tags_list:
+            try:
+                tag_obj = Tag()
+                tag_obj.name = tag
+                tag_obj.save()
+                response[tag] = "添加成功！"
+            except IntegrityError:
+                response[tag] = "添加失败！"
+        return HttpResponse(json.dumps({'response': response}), content_type="application/json")
+
+    return HttpResponse(json.dumps({'response': "请求错误！"}), content_type="application/json")
 
 
-# def category(request, pk):
-#     # 记得在开始部分导入 Category 类
-#     cate = get_object_or_404(Category, pk=pk)
-#     post_list = Post.objects.filter(category=cate)
-#     return render(request, 'blog/index.html', context={'post_list': post_list})
+# 删除操作
+@login_required()
+def del_comment(request):
+    if request.method == 'POST' and request.user.is_staff:
+        comment_id = request.POST.get('comment_id', '')
+        try:
+            Comment.objects.filter(pk=comment_id).delete()
+            response = "删除成功！"
+        except BaseException:
+            response = "删除失败！"
+
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+# 删除操作
+@login_required()
+def del_reply(request):
+    if request.method == 'POST' and request.user.is_staff:
+        reply_id = request.POST.get('reply_id', '')
+        try:
+            Reply.objects.filter(pk=reply_id).delete()
+            response = "删除成功！"
+        except BaseException:
+            response = "删除失败！"
+
+        return HttpResponse(json.dumps(response), content_type="application/json")

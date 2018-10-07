@@ -16,8 +16,13 @@ def archives():
 
 
 @register.simple_tag
-def get_categories():
+def get_categories_all():
     return Category.objects.all()
+
+
+@register.simple_tag
+def get_tags_all():
+    return Tag.objects.all()
 
 
 @register.simple_tag

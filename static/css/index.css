@@ -4,6 +4,10 @@
     margin: 10px 0px;
 }
 
+/*搜索高亮*/
+span.highlighted {
+    color: red;
+}
 /*header*/
 #head {
     height: 70px;
@@ -13,4 +17,24 @@
 #footer {
     height: 70px;
     background-color: #d4edda;
+}
+
+/*detail*/
+.reply_comment_del{
+    color: #7ebfff;
+    display: none;
+    cursor: pointer;
+    padding: 5px 0px;
+}
+.reply_comment {
+    color: #7ebfff;
+    display: none;
+    cursor: pointer;
+    padding: 5px 0px;
+}
+.reply_r {
+    color: #7ebfff;
+    display: none;
+    cursor: pointer;
+    padding: 0px 5px;
 }

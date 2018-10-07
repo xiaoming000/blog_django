@@ -10,7 +10,7 @@
             </h4>
             <div class="article_info alert alert-success" style="text-align: center;padding: 5px 0px;">
                 <span class="mx-auto" style="padding: 0px 5px;"><a href="#">{{ post.category.name }}</a></span>
-                <span class="" style="padding: 0px 5px;"><a href="#"><time datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
+                <span class="" style="padding: 0px 5px;"><a href="#"><time datetime="{{ post.created_time }}">{{ post.created_time | timesince }}前</time></a></span>
                 <!--<span class="" style="padding: 0px 5px;"><a href="#">{{ post.author }}</a></span>-->
                 <span class="" style="padding: 0px 5px;"><a href="#">{{ post.comment_set.count }} 评论</a></span>
                 <span><a href="#" style="padding: 0px 5px;">{{post.views}} 阅读</a></span>

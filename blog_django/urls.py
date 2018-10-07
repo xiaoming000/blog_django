@@ -24,5 +24,7 @@ urlpatterns = [
     url(r'', include('comments.urls')),
     url(r'^all/rss/$', AllPostsRssFeed(), name='rss'),
     url(r'^search/', include('haystack.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
     path('accounts/', include('allauth.urls')),
+    path('accounts/', include('myaccount.urls')),
 ]

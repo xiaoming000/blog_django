@@ -8,6 +8,7 @@
     <!-- meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="baidu-site-verification" content="1fnRpUjRYB" />
 
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -15,25 +16,18 @@
 
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script rel="stylesheet" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script rel="stylesheet" src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script rel="stylesheet" src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
 
     {% block head %}{% endblock head %}
 
     <script>
     $(function () {
-        {% if nav == 1 %}
-            $(".Python").addClass("active");
-        {% elif nav == 2%}
-            $(".Linux").addClass("active");
-        {% elif nav == 3 %}
-            $(".other").addClass("active");
-        {% elif nav == 4 %}
-            $(".essay").addClass("active");
-        {% elif nav == 5 %}
-            $(".message").addClass("active");
-        {% endif %}
+        $('[data-toggle="tooltip"]').tooltip();
     });
     </script>
 </head>
@@ -46,13 +40,22 @@
         <img class="rounded-circle" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="width: 70px;height: 70px;">
     </div>
     <div class="float-right">
-        <a href="{% url 'account_logout' %}" style="font-size: 20px;padding-right: 10px;">
+        <a href="{% url 'account_logout' %}?next={{ request.path }}" style="font-size: 20px;padding-right: 10px;">
             <i class="fa fa-sign-out"><span style="padding-left: 5px;">退出</span></i>
         </a>
     </div>
+
+        {% if user.is_staff %}
+        <div class="float-right">
+            <a href="{% url 'blog:push' %}" style="font-size: 20px;padding-right: 10px;">
+                <i class="fa fa-send "><span style="padding-left: 5px;">发文</span></i>
+            </a>
+        </div>
+        {% endif %}
+
     {% else %}
     <div class="float-right">
-        <a href="{% url 'account_login' %}" style="font-size: 20px;padding-right: 10px;">
+        <a href="{% url 'account_login' %}?next={{ request.path }}" style="font-size: 20px;padding-right: 10px;">
             <i class="fa fa-user"><span style="padding-left: 5px;">登入</span></i>
         </a>
     </div>
@@ -62,28 +65,39 @@
 <div class="clearfix">
     <nav class="navbar navbar-expand-xl bg-dark navbar-dark" role="navigation">
         <div class="container">
-        <!--导航栏首页-->
-        <a class="navbar-brand" href="{% url 'blog:index' %}">首页</a>
-        <!--栏目-->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar" style="font-size: 16px;">
-            <!--搜素栏目-->
-            <ul class="nav navbar-nav bar">
-                <li class="nav-item Python"> <a class="nav-link" href="{% url 'blog:python_list' %}">Python</a></li>
-                <li class="nav-item Linux"> <a class="nav-link" href="{% url 'blog:linux_list' %}">Linux</a></li>
-                <!--<li class="nav-item other"> <a class="nav-link" href="{% url 'blog:other_list' %}">其他技术文章</a></li>-->
-                <li class="nav-item essay"> <a class="nav-link" href="{% url 'blog:essay_list' %}">随笔</a></li>
-                <li class="nav-item message"> <a class="nav-link" href="{% url 'blog:message' %}">与我联系</a></li>
-            </ul>
-        </div>
-        <div>
-            <form class="form-inline" role="search">
-                <input type="text" class="form-control" />
-                <button class="btn btn-success" type="button">搜索</button>
-            </form>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <!--导航栏首页-->
+            <a class="navbar-brand" href="{% url 'blog:index' %}">首页</a>
+            <!--栏目-->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar" style="font-size: 16px;">
+                <!--搜素栏目-->
+                <ul class="nav navbar-nav bar">
+                    <li class="nav-item Python {% if request.path == '/python/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'blog:python_list' %}">Python</a>
+                    </li>
+                    <li class="nav-item Linux {% if request.path == '/linux/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'blog:linux_list' %}">Linux</a>
+                    </li>
+                    <li class="nav-item other {% if request.path == '/other/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'blog:other_list' %}">其他技术文章</a>
+                    </li>
+                    <li class="nav-item essay {% if request.path == '/essay/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'blog:essay_list' %}">随笔</a>
+                    </li>
+                    <li class="nav-item message {% if request.path == '/message/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'blog:message' %}">与我联系</a>
+                    </li>
+                </ul>
+
+                <form class="form-inline navbar-form navbar-right" role="search" method="get" id="searchform" action="{% url 'haystack_search' %}">
+                    <input class="form-control" type="search" name="q" placeholder="搜索" required/>
+                    <button class="btn btn-success" type="submit">搜索</button>
+                </form>
+            </div>
+            <button class="navbar-toggler navbar-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
         </div>
     </nav>
 </div>
@@ -93,7 +107,10 @@
 
 <footer id="footer">
     <div style="height: 70px;">
-
+                    <div style="width:300px;margin:0 auto; padding:20px 0;">
+                <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=36073102000050" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">赣公网安备 36073102000050号</p></a>
+            </div>
+         
     </div>
 </footer>
 

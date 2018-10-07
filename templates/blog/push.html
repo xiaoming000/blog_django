@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load blog_tags %}
+{% block head %}
+
+<script>
+    tinyMCE.init({
+            'height': 400,
+            'mode':'textareas',
+            'theme':'modern',
+        });
+    
+    $(function () {
+    //    选择列表内容获取函数
+        function OptionVal(select_name) {
+            var str = "";
+            $("#"+ select_name + " option").each(function () {
+            //    遍历所有option
+                var value = $(this).text();
+                if ($(this).is(':checked')) {
+                    str += value + " ";
+                }
+            });
+            return str;
+        }
+        // alert(OptionVal())
+        $("#tags").change(function () {
+            var str = OptionVal('tags');
+            $(this).prev().text("标签："+ str);
+        });
+
+        $("#category").change(function () {
+            var str = OptionVal('category');
+            $(this).prev().text("类别："+ str);
+        });
+
+        $("#add_tags_btn").click(function () {
+            $(this).css("display", "none");
+            $("#add_tags_form").css("display", "block");
+        });
+
+        function close_add_tags(){
+            $("#add_tags_btn").css("display", "block");
+            $("#add_tags_form").css("display", "none");
+        }
+        $("#add_tags_cancel").click(function () {
+            close_add_tags();
+        });
+
+        $("#add_tags_submit").click(function () {
+            if ($("#add_tags_input").val() == ""){
+                alert("请输入内容后再提交！");
+            } else {
+                $.post("/add_tags/",
+                    {
+                        csrfmiddlewaretoken: $("#add_tags_input").attr("data-csrf"),
+                        tags: $("#add_tags_input").val(),
+                    },
+                    function (data, status) {
+                        var response_str = " "
+                        for(var key in data['response']){
+                            response_str += key + ":" + data['response'][key] + ",";
+                        }
+                        alert(response_str);
+                        close_add_tags();
+                });
+            }
+        });
+    });
+    
+</script>
+{% endblock head %}
+
+{% block middle %}
+<div class="container">
+    <div class="row clearfix" style="padding: 50px 0px;">
+        <div class="col-lg-12 col-sm-12">
+            <div style="margin-bottom: 50px;">
+                <form role="form" method="post" action="{% url 'blog:push' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                    <input type="hidden" name="category" value="{{ category }}"/>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="title" name="title" placeholder="请输入文章的标题">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="excerpt" name="excerpt" placeholder="请输入文章摘要">
+                        <span class="help-block">文章摘要选填！若未填系统会截取文章前一段文字！</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="body">正文</label>
+                        <textarea class="form-control" id="body" name="body"></textarea>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-md-5">
+                            <div style="padding: 10px 0px;">标签：</div>
+                            <select multiple class="form-control"  id="tags" name="tags[]">
+                                {% get_tags_all as tag_list %}
+                                {% for tag in tag_list %}
+                                    <option value="{{ tag.id }}">{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <div id="add_tags_box">
+                                <button type="button" class="btn-sm btn-info" id="add_tags_btn">添加标签</button>
+                                <div class="form-group" id="add_tags_form" style="display: none;">
+                                    <label for="add_tags_input">请输入要添加的标签，以空格隔开：</label>
+                                    <input type="text" class="form-control" id="add_tags_input" name="tag_name" data-csrf="{{ csrf_token}}" placeholder="请输入需要添加的标签" >
+                                    <div style="padding: 10px 0px;">
+                                        <button type="button" class="btn btn-sm btn-light" id="add_tags_cancel">取消</button>
+                                        <button type="button" class="btn btn-sm btn-success" id="add_tags_submit">提交</button>
+                                    </div>
+                                    <hr>
+                                    {% get_tags_all as tag_list %}
+                                    {% for tag in tag_list %}
+                                        <div class="float-left" data-id="{{ tag.id }}" style="padding: 0px 10px;">{{ tag.name }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group offset-md-1 col-md-5">
+                            <div style="padding: 10px 0px;">选择类别：</div>
+                            <select class="form-control"  id="category" name="category">
+                                {% get_categories_all as category_list %}
+                                {% for category in category_list %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    {{ form.title.errors }}
+                    <div class="clearfix"></div>
+                    <div class="offset-5">
+                        <input type="submit" class="btn-success btn-lg" value="提交">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock middle %}
