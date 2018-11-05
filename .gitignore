@@ -3,7 +3,11 @@
 db.sqlite3
 
 
-__pycache__
+blog/__pycache__
+blog_django/__pycache__
+comments/__pycache__
+myaccount/__pycache__
+
 
 blog_django/settings.py
 

@@ -18,7 +18,7 @@
 
 
 {% block main %}
-<article class="post post-{{post.pk}}">
+<article class="post post-{{post.pk}}"  style="color: #444;background-color: white;padding: 20px;">
     <header class="entry-header">
         <h2 class="text-center" style="margin: 10px 0px;">{{post.title}}</h2>
         <div class="entry-meta" style="color: #00a67c;text-align: center; padding: 5px 0px;">
@@ -39,7 +39,7 @@
             </span>
         </div>
     </header>
-    <div class="entry-content clearfix" style="color: #444;">
+    <div class="entry-content clearfix">
         {{post.body|safe}}
     </div>
 </article>
