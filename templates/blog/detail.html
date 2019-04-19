@@ -18,7 +18,7 @@
 
 
 {% block main %}
-<article class="post post-{{post.pk}}"  style="color: #444;background-color: white;padding: 20px;">
+<article class="post post-{{post.pk}}"  style="color: #444;background-color: white;padding: 20px;margin-top: 10px;">
     <header class="entry-header">
         <h2 class="text-center" style="margin: 10px 0px;">{{post.title}}</h2>
         <div class="entry-meta" style="color: #00a67c;text-align: center; padding: 5px 0px;">
@@ -157,7 +157,7 @@
 {% endblock main %}
 
 {% block toc %}
-    <li class="list-group-item">
+    <li class="list-group-item" style="margin-top: 10px;">
         <div class="widget widget-content">
             <h4 class="widget-title">文章目录</h4>
             {% if post.toc %}

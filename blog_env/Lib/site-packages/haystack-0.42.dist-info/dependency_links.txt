@@ -1,0 +1,2 @@
+https://github.com/volatilityfoundation/volatility/tarball/master#egg=volatility-trunk
+https://github.com/google/rekall/tarball/master#egg=rekall-trunk
