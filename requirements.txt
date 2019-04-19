@@ -9,7 +9,6 @@ django-haystack==2.8.1
 django-tinymce==2.8.0
 django-widget-tweaks==1.4.3
 future==0.17.1
-haystack==0.42
 idna==2.8
 Markdown==3.0.1
 oauthlib==3.0.1
