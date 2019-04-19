@@ -10,6 +10,5 @@ myaccount/__pycache__
 
 
 blog_django/settings.py
-
-./blog_env
+blog_env
 
